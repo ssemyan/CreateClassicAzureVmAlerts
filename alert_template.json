@@ -1,0 +1,56 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "virtualMachineName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Virtual Machine to create the alert for."
+      }
+    },
+    "sendToEmail": {
+      "type": "string",
+      "metadata": {
+        "description": "Email to send alerts to."
+      }
+    }
+  },
+  "variables": {
+    "ruleName": "[concat('memory_80_',parameters('virtualMachineName'))]",
+    "ruleDesc": "Email when Memory greater than 80 percent for 5 min"
+  },
+  "resources": [
+    {
+      "type": "microsoft.insights/alertrules",
+      "name": "[variables('ruleName')]",
+      "apiVersion": "2016-03-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "name": "[variables('ruleName')]",
+        "description": "[variables('ruleDesc')]",
+        "isEnabled": true,
+        "condition": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+          "dataSource": {
+            "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+            "resourceUri": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachineName'))]",
+            "metricNamespace": null,
+            "metricName": "\\Memory\\% Committed Bytes In Use"
+          },
+          "operator": "GreaterThan",
+          "threshold": 80,
+          "windowSize": "PT5M"
+        },
+        "action": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+          "sendToServiceOwners": false,
+          "customEmails": [
+            "[parameters('sendToEmail')]"
+          ]
+        }
+      }
+    }
+  ],
+  "outputs": {
+  }
+}
