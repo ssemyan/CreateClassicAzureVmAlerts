@@ -41,13 +41,15 @@
           "threshold": 80,
           "windowSize": "PT5M"
         },
-        "action": {
-          "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
-          "sendToServiceOwners": false,
-          "customEmails": [
-            "[parameters('sendToEmail')]"
-          ]
-        }
+        "actions": [
+          {
+            "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+            "sendToServiceOwners": false,
+            "customEmails": [
+              "[parameters('sendToEmail')]"
+            ]
+          }
+        ]
       }
     }
   ],
