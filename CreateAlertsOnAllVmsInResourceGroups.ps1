@@ -20,7 +20,7 @@ foreach ($rg in $allresgroup)
 			Write-Host Creating alert for VM: $vm.Name 
 
 			# run ARM template against VM
-			New-AzResourceGroupDeployment -Name mem_alert_$($vm.Name) -ResourceGroupName $rg.ResourceGroupName -TemplateFile .\alert_template.json -virtualMachineName $vm.Name -sendToEmail $sendToEmail -Verbose
+			New-AzureRMResourceGroupDeployment -Name mem_alert_$($vm.Name) -ResourceGroupName $rg.ResourceGroupName -TemplateFile .\alert_template.json -virtualMachineName $vm.Name -sendToEmail $sendToEmail -Verbose
 		}
 	}
 	else
