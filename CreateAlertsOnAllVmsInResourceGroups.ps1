@@ -1,6 +1,6 @@
 ﻿# Create array of resource groups we want to process 
-$resourceGroupsToProcess = @('my_group', 'my_group_2')
-$sendToEmail = 'myemail@company.com'
+$resourceGroupsToProcess = @('mygr', 'my_group_2')
+$sendToEmails = 'myemail@company.com,myotheremail@company.com'
 
 # To process all resource groups uncomment out the next line - NOTE: THIS WILL CREATE AN ALERT FOR EVERY VM IN YOUR SUBSCRIPTION
 #$resourceGroupsToProcess = @()
@@ -20,7 +20,7 @@ foreach ($rg in $allresgroup)
 			Write-Host Creating alert for VM: $vm.Name 
 
 			# run ARM template against VM
-			New-AzureRMResourceGroupDeployment -Name mem_alert_$($vm.Name) -ResourceGroupName $rg.ResourceGroupName -TemplateFile .\alert_template.json -virtualMachineName $vm.Name -sendToEmail $sendToEmail -Verbose
+			New-AzureRMResourceGroupDeployment -Name mem_alert_$($vm.Name) -ResourceGroupName $rg.ResourceGroupName -TemplateFile .\alert_template.json -virtualMachineName $vm.Name -sendToEmails $sendToEmails -Verbose
 		}
 	}
 	else

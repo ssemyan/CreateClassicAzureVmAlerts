@@ -17,12 +17,12 @@ Alternatively, if you want to run against **all resource groups** uncomment out 
 #$resourceGroupsToProcess = @()
 ```
 
-Then update the email to send alerts to:
+Then update the email(s) to send alerts to (comma-separated if more than one):
 ```
-$sendToEmail = 'myemail@company.com'
+$sendToEmail = 'myemail@company.com,myemail2@company.com'
 ```
 
-Finally, run the following command in PowerShell. Note: this requires the [Azure PowerShell Module](https://docs.microsoft.com/en-us/powershell/azure/overview?view=azps-1.3.0)
+Finally, run the following command in PowerShell. Note: this requires the [Azure PowerShell Module](https://docs.microsoft.com/en-us/powershell/azure/overview?view=azps-1.3.0) and if using the new version, requires the _Enable-AzureRmAlias_ to be set.
 ```
 .\CreateAlertsOnAllVmsInResourceGroups.ps1
 ```
