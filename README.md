@@ -1,5 +1,11 @@
 # Create Classic Azure VM Alerts
-This PowerShell script and ARM template will create a classic sytle Azure alert that emails a specified address when the memory usage of the VM exceeds 80%. The PowerShell script will set this alert for every VM in the specified resource groups. This requires the VM Guest Diagnostics extension needs to be installed. Learn more about this here: 
+This PowerShell script and ARM templates will create classic-style Azure alerts that email specified addresses when:
+
+1. The memory usage of the VM exceeds 80% for 5 minutes
+1. The CPU usage of the VM exceeds 80% for 5 minutes
+1. The network in of the VM falls below 15K for 5 minutes
+
+The PowerShell script will set these alerts for every VM in the specified resource groups. This requires the VM Guest Diagnostics extension needs to be installed. Learn more about this here: 
 * Windows - https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/diagnostics-windows
 * Linux - https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/diagnostics-linux
 
