@@ -1,0 +1,57 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "virtualMachineName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Virtual Machine to create the alert for."
+      }
+    },
+    "sendToEmails": {
+      "type": "string",
+      "metadata": {
+        "description": "Comma-separated list of emails to send alerts to."
+      }
+    }
+  },
+  "variables": {
+    "ruleName": "[concat('cpu_80_',parameters('virtualMachineName'))]",
+    "ruleDesc": "Email when CPU greater than 80 percent for 5 min",
+    "customEmails": "[split(parameters('sendToEmails'), ',')]"
+  },
+  "resources": [
+    {
+      "type": "microsoft.insights/alertrules",
+      "name": "[variables('ruleName')]",
+      "apiVersion": "2016-03-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "name": "[variables('ruleName')]",
+        "description": "[variables('ruleDesc')]",
+        "isEnabled": true,
+        "condition": {
+          "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+          "dataSource": {
+            "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+            "resourceUri": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachineName'))]",
+            "metricNamespace": null,
+            "metricName": "Percentage CPU"
+          },
+          "operator": "GreaterThan",
+          "threshold": 80,
+          "windowSize": "PT5M"
+        },
+        "actions": [
+          {
+            "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+            "sendToServiceOwners": false,
+            "customEmails": "[variables('customEmails')]"
+          }
+        ]
+      }
+    }
+  ],
+  "outputs": {
+  }
+}

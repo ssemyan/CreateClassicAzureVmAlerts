@@ -17,10 +17,16 @@ foreach ($rg in $allresgroup)
 		$vms = Get-AzureRmVM -ResourceGroupName $rg.ResourceGroupName
 		foreach ($vm in $vms)
 		{
-			Write-Host Creating alert for VM: $vm.Name 
+			Write-Host Creating alerts for VM: $vm.Name 
 
-			# run ARM template against VM
-			New-AzureRMResourceGroupDeployment -Name mem_alert_$($vm.Name) -ResourceGroupName $rg.ResourceGroupName -TemplateFile .\alert_template.json -virtualMachineName $vm.Name -sendToEmails $sendToEmails -Verbose
+			# run ARM template against VM for memory alert
+			New-AzureRMResourceGroupDeployment -Name mem_alert_$($vm.Name) -ResourceGroupName $rg.ResourceGroupName -TemplateFile .\alert_memory_template.json -virtualMachineName $vm.Name -sendToEmails $sendToEmails -Verbose
+
+			# run ARM template against VM for CPU alert
+			New-AzureRMResourceGroupDeployment -Name cpu_alert_$($vm.Name) -ResourceGroupName $rg.ResourceGroupName -TemplateFile .\alert_cpu_template.json -virtualMachineName $vm.Name -sendToEmails $sendToEmails -Verbose
+
+			# run ARM template against VM for network alert
+			New-AzureRMResourceGroupDeployment -Name net_alert_$($vm.Name) -ResourceGroupName $rg.ResourceGroupName -TemplateFile .\alert_network_template.json -virtualMachineName $vm.Name -sendToEmails $sendToEmails -Verbose
 		}
 	}
 	else
