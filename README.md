@@ -28,7 +28,7 @@ Then update the email(s) to send alerts to (comma-separated if more than one):
 $sendToEmails = 'myemail@company.com,myemail2@company.com'
 ```
 
-Finally, run the following command in PowerShell. Note: this requires the [Azure PowerShell Module](https://docs.microsoft.com/en-us/powershell/azure/overview?view=azps-1.3.0) and if using the new version, requires the _Enable-AzureRmAlias_ to be set.
+Finally, run the following command in PowerShell. Note: this requires the [Azure PowerShell Module](https://docs.microsoft.com/en-us/powershell/azure/overview?view=azps-1.3.0) and if using the new version, the script will set the AzureRm alias via _Enable-AzureRmAlias_.
 ```
 .\CreateAlertsOnAllVmsInResourceGroups.ps1
 ```

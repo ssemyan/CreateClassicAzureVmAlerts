@@ -5,6 +5,13 @@ $sendToEmails = 'myemail@company.com,myotheremail@company.com'
 # To process all resource groups uncomment out the next line - NOTE: THIS WILL CREATE AN ALERT FOR EVERY VM IN YOUR SUBSCRIPTION
 #$resourceGroupsToProcess = @()
 
+# Enable the AzureRM alias if not already set
+$alias = Get-Command Get-AzureRmResourceGroup -errorAction SilentlyContinue
+if (-Not $alias) {
+  Write-Host Enabling AzureRm Alias
+  Enable-AzureRmAlias -Scope Process
+}
+
 $allresgroup = Get-AzureRmResourceGroup
   
 foreach ($rg in $allresgroup)
