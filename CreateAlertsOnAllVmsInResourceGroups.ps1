@@ -2,8 +2,16 @@
 $resourceGroupsToProcess = @('mygr', 'my_group_2')
 $sendToEmails = 'myemail@company.com,myotheremail@company.com'
 
-# To process all resource groups uncomment out the next line - NOTE: THIS WILL CREATE AN ALERT FOR EVERY VM IN YOUR SUBSCRIPTION
+# To process all resource groups uncomment out the next line - NOTE: THIS WILL INSTALL THE DIAGNOSTIC EXTENSION AND CREATE ALERTS FOR EVERY VM IN YOUR SUBSCRIPTION
 #$resourceGroupsToProcess = @()
+
+# To add the IaaSDiagnostics extension to the VM, change the next line to $TRUE and set the storage variables appropriately
+$addExtension = $FALSE
+$existingdiagnosticsStorageAccountName = 'mystorageaccount'
+$existingdiagnosticsStorageResourceGroup = 'mystorageaccountresourcegroup'
+
+# To disable adding alerts, set the next line to $FALSE
+$addAlerts = $TRUE
 
 # Enable the AzureRM alias if not already set
 $alias = Get-Command Get-AzureRmResourceGroup -errorAction SilentlyContinue
@@ -24,16 +32,26 @@ foreach ($rg in $allresgroup)
 		$vms = Get-AzureRmVM -ResourceGroupName $rg.ResourceGroupName
 		foreach ($vm in $vms)
 		{
-			Write-Host Creating alerts for VM: $vm.Name 
+			if ($addExtension)
+			{
+				Write-Host Enable IaaSDiagnostics extension for VM: $vm.Name 
+				New-AzureRMResourceGroupDeployment -Name diag_ext_$($vm.Name) -ResourceGroupName $rg.ResourceGroupName -TemplateFile .\diag_template.json -virtualMachineName $vm.Name `
+												   -existingdiagnosticsStorageAccountName $existingdiagnosticsStorageAccountName -existingdiagnosticsStorageResourceGroup $existingdiagnosticsStorageResourceGroup -Verbose
+			}
 
-			# run ARM template against VM for memory alert
-			New-AzureRMResourceGroupDeployment -Name mem_alert_$($vm.Name) -ResourceGroupName $rg.ResourceGroupName -TemplateFile .\alert_memory_template.json -virtualMachineName $vm.Name -sendToEmails $sendToEmails -Verbose
+			if ($addAlerts)
+			{
+				Write-Host Creating alerts for VM: $vm.Name 
 
-			# run ARM template against VM for CPU alert
-			New-AzureRMResourceGroupDeployment -Name cpu_alert_$($vm.Name) -ResourceGroupName $rg.ResourceGroupName -TemplateFile .\alert_cpu_template.json -virtualMachineName $vm.Name -sendToEmails $sendToEmails -Verbose
+				# run ARM template against VM for memory alert
+				New-AzureRMResourceGroupDeployment -Name mem_alert_$($vm.Name) -ResourceGroupName $rg.ResourceGroupName -TemplateFile .\alert_memory_template.json -virtualMachineName $vm.Name -sendToEmails $sendToEmails -Verbose
 
-			# run ARM template against VM for network alert
-			New-AzureRMResourceGroupDeployment -Name net_alert_$($vm.Name) -ResourceGroupName $rg.ResourceGroupName -TemplateFile .\alert_network_template.json -virtualMachineName $vm.Name -sendToEmails $sendToEmails -Verbose
+				# run ARM template against VM for CPU alert
+				New-AzureRMResourceGroupDeployment -Name cpu_alert_$($vm.Name) -ResourceGroupName $rg.ResourceGroupName -TemplateFile .\alert_cpu_template.json -virtualMachineName $vm.Name -sendToEmails $sendToEmails -Verbose
+
+				# run ARM template against VM for network alert
+				New-AzureRMResourceGroupDeployment -Name net_alert_$($vm.Name) -ResourceGroupName $rg.ResourceGroupName -TemplateFile .\alert_network_template.json -virtualMachineName $vm.Name -sendToEmails $sendToEmails -Verbose
+			}
 		}
 	}
 	else

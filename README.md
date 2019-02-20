@@ -9,6 +9,10 @@ The PowerShell script will set these alerts for every VM in the specified resour
 * Windows - https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/diagnostics-windows
 * Linux - https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/diagnostics-linux
 
+To install the VM Extension while creating the alerts, set the value of _$addExtension_ to _$TRUE_ and update the values for _$existingdiagnosticsStorageAccountName_ and _$existingdiagnosticsStorageResourceGroup_
+
+To only install the extension and not create alerts, set the value of _$addAlerts_ to _$FALSE_
+
 **Note: Classic Style alerts are scheduled to be depricated June 30, 2019. Read more about this here: https://docs.microsoft.com/en-us/azure/azure-monitor/platform/monitoring-classic-retirement**
 
 To use this script edit the details in _CreateAlertsOnAllVmsInResourceGroups.ps1_:
