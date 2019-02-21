@@ -1,4 +1,9 @@
 # Create Classic Azure VM Alerts
+
+**Note: Classic Style alerts are scheduled to be depricated June 30, 2019. Read more about this here: https://docs.microsoft.com/en-us/azure/azure-monitor/platform/monitoring-classic-retirement**
+
+For an example on how to create the new-style of alerts in Azure Monitor, go here: https://github.com/ssemyan/CreateAzureMonitorVmAlerts
+
 This PowerShell script and ARM templates will create classic-style Azure alerts that email specified addresses when:
 
 1. The memory usage of the VM exceeds 80% for 5 minutes
@@ -12,8 +17,6 @@ The PowerShell script will set these alerts for every VM in the specified resour
 To install the **Windows** VM Extension while creating the alerts, set the value of _$addExtension_ to _$TRUE_ and update the values for _$existingdiagnosticsStorageAccountName_ and _$existingdiagnosticsStorageResourceGroup_
 
 To only install the extension and not create alerts, set the value of _$addAlerts_ to _$FALSE_
-
-**Note: Classic Style alerts are scheduled to be depricated June 30, 2019. Read more about this here: https://docs.microsoft.com/en-us/azure/azure-monitor/platform/monitoring-classic-retirement**
 
 To use this script edit the details in _CreateAlertsOnAllVmsInResourceGroups.ps1_:
 
